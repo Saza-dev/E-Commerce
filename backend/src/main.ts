@@ -26,7 +26,14 @@ async function bootstrap() {
     maxAge: 86400, // cache preflight
   });
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true }, // <-- convert "1" -> 1
+      forbidNonWhitelisted: false,
+    }),
+  );
   app.useGlobalFilters(new PrismaExceptionFilter());
 
   await app.listen(3000);
