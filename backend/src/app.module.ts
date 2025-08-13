@@ -11,14 +11,23 @@ import { AdminModule } from './admin/admin.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { ProfilesModule } from './profiles/profiles.module';
 
+const throttlers =
+  process.env.NODE_ENV === 'production'
+    ? [
+        { ttl: 60_000, limit: 60 },
+        { name: 'register', ttl: 60_000, limit: 5 },
+        { name: 'login', ttl: 60_000, limit: 10 },
+      ]
+    : [
+        { ttl: 60_000, limit: 1000 },
+        { name: 'register', ttl: 60_000, limit: 100 },
+        { name: 'login', ttl: 60_000, limit: 200 },
+      ];
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    ThrottlerModule.forRoot([
-      { ttl: 60_000, limit: 60 },
-      { name: 'register', ttl: 60_000, limit: 5 },
-      { name: 'login', ttl: 60_000, limit: 10 },
-    ]),
+    ThrottlerModule.forRoot(throttlers),
     PrismaModule,
     AuthModule,
     UsersModule,

@@ -16,6 +16,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { CreateAddressDto } from './dtos/create-address.dto';
 import { UpdateAddressDto } from './dtos/update-address.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @UseGuards(JwtAuthGuard)
 @Controller()
@@ -23,6 +24,7 @@ export class AddressesController {
   constructor(private addresses: AddressesService) {}
 
   // ----- Customer (self) -----
+  @SkipThrottle()
   @Get('addresses')
   listMine(@CurrentUser() user: any) {
     return this.addresses.listMine(user.sub);

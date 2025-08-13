@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* App-wide styles */
+:root {
+  --bg: 255 255 255;
+  --fg: 15 23 42;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: rgb(var(--fg));
+  background: rgb(var(--bg));
+}
