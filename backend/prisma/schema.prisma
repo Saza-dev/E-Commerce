@@ -119,3 +119,51 @@ model CustomerProfile {
 }
 
 
+
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String
+  slug      String     @unique
+  parentId  Int?       // For subcategories
+  parent    Category?  @relation("CategoryToSubcategory", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryToSubcategory")
+  products  Product[]
+}
+
+model Product {
+  id           Int             @id @default(autoincrement())
+  name         String
+  description  String
+  slug         String          @unique
+  categoryId   Int
+  category     Category        @relation(fields: [categoryId], references: [id])
+  variants     ProductVariant[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model ProductVariant {
+  id         Int           @id @default(autoincrement())
+  productId  Int
+  product    Product       @relation(fields: [productId], references: [id],onDelete: Cascade)
+  size       String
+  color      String
+  price      Float
+  quantity   Int
+  status     StockStatus   @default(IN_STOCK)
+  images     ProductImage[] 
+}
+
+model ProductImage {
+  id        Int           @id @default(autoincrement())
+  variantId Int
+  variant   ProductVariant @relation(fields: [variantId], references: [id],onDelete: Cascade)
+  url       String
+}
+
+enum StockStatus {
+  IN_STOCK
+  OUT_OF_STOCK
+  PRE_ORDER
+}
