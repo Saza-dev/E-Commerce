@@ -7,8 +7,9 @@ import AdminUserRow from "./AdminUserRow";
 import Button from "@/src/components/ui/button";
 import { Input, Label } from "@/src/components/ui/input";
 import toast from "react-hot-toast";
-import CreateAdminModal from "./CreateAdminModal";
+
 import clsx from "clsx";
+import CreateAdminModal from "./CreateAdminModal";
 
 const SORTABLE: UsersQuery["sortBy"][] = [
   "createdAt",
@@ -148,7 +149,7 @@ export default function AdminUsersTable() {
       ) : items.length === 0 ? (
         <div className="text-sm text-gray-600">No users found.</div>
       ) : (
-        <div className="overflow-auto rounded-xl border">
+        <div className="overflow-auto rounded-xl">
           <table className="min-w-full bg-white text-sm">
             <thead className="bg-gray-50 text-gray-700">
               <tr>

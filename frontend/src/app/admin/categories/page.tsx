@@ -1,13 +1,13 @@
 "use client";
 
-import AdminUsersTable from "@/src/components/admin/Users/AdminUsersTable";
+import AdminCategoriesTable from "@/src/components/admin/categories/AdminCategoriesTable";
 import Protected from "@/src/components/auth/Protected";
 
 export default function AdminUsersPage() {
   return (
     <Protected requiredRole="ADMIN">
       <div className="mx-auto max-w-5xl">
-        <AdminUsersTable />
+        <AdminCategoriesTable />
       </div>
     </Protected>
   );

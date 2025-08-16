@@ -26,7 +26,7 @@ export default function RegisterPage() {
   const [formError, setFormError] = useState<string>();
 
   useEffect(() => {
-    if (authenticated) router.replace("/profile");
+    if (authenticated) router.replace("/");
   }, [authenticated, router]);
 
   const initialValues: RegisterValues = {
@@ -50,7 +50,7 @@ export default function RegisterPage() {
             try {
               await register(values);
               toast.success("Account created!");
-              router.replace("/profile");
+              router.replace("/");
             } catch (err: any) {
               const msg = axios.isAxiosError(err)
                 ? (err.response?.data as any)?.message || err.message

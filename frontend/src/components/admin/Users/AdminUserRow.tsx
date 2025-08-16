@@ -52,7 +52,7 @@ export default function AdminUserRow({
   };
 
   return (
-    <tr className="border-b last:border-0">
+    <tr className="">
       <td className="py-3">
         <div className="font-medium">{u.email}</div>
         <div className="text-xs text-gray-500">{u.name || "—"}</div>

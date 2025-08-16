@@ -32,15 +32,12 @@ export default function AppHeader() {
               <Button variant="ghost">Profile</Button>
             </Link>
             <Link href="/addresses">
-              <Button variant="ghost">Addresses</Button>
+              <Button variant="ghost">My Addresses</Button>
             </Link>
             {user?.role === "ADMIN" && (
               <>
-                <Link href="/admin/users">
-                  <Button variant="ghost">Admin Users</Button>
-                </Link>
-                <Link href="/admin/addresses">
-                  <Button variant="ghost">Admin Addresses</Button>
+                <Link href="/admin/dashboard">
+                  <Button variant="ghost">Dashboard</Button>
                 </Link>
               </>
             )}

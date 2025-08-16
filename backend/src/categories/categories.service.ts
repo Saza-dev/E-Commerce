@@ -23,13 +23,14 @@ export class CategoriesService {
       data: {
         name: dto.name,
         slug: dto.slug,
-        parentId: dto.parentId,
+        parentId: dto.parentId || null,
       },
     });
   }
 
   async deleteCategory(id: number) {
-    return this.prisma.category.delete({ where: { id } });
+    await this.prisma.category.delete({ where: { id } });
+    return { success: true };
   }
 
   async listCategories() {

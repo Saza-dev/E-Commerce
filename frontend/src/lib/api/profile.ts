@@ -17,6 +17,5 @@ export async function getProfile() {
 
 export async function updateProfile(dto: ProfileDTO) {
   const { data } = await http.patch("/profile", dto);
-  // data: { user, profile }
   return data as { user: any; profile: any };
 }

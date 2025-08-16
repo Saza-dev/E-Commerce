@@ -22,7 +22,7 @@ export default function LoginPage() {
   const [formError, setFormError] = useState<string>();
 
   useEffect(() => {
-    if (authenticated) router.replace("/profile");
+    if (authenticated) router.replace("/");
   }, [authenticated, router]);
 
   const initialValues: LoginValues = { email: "", password: "" };
@@ -41,7 +41,7 @@ export default function LoginPage() {
             try {
               await login(values.email, values.password);
               toast.success("Logged in!");
-              const next = sp.get("next") || "/profile";
+              const next = sp.get("next") || "/";
               router.replace(next);
             } catch (err: any) {
               // Try to extract a helpful message
