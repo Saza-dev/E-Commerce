@@ -43,16 +43,40 @@ export class CategoriesService {
     return this.prisma.category.findMany({
       where: { parentId: null },
       include: {
-        children: true,
+        children: {
+          include: {
+            children: { include: { children: true } },
+          },
+        },
       },
     });
   }
 
-  async getCategoryBySlug(slug: string) {
-    const category = await this.prisma.category.findUnique({
-      where: { slug },
+  async getCategoryProductsBySlug(slug: string) {
+    const prisma = this.prisma;
+
+    // Recursively get all descendant slugs
+    async function getDescendantSlugs(currentSlug: string): Promise<string[]> {
+      const children = await prisma.category.findMany({
+        where: { parent: { slug: currentSlug } }, // find children by parent
+        select: { slug: true },
+      });
+
+      let slugs: string[] = [];
+      for (const child of children) {
+        slugs.push(child.slug);
+        slugs.push(...(await getDescendantSlugs(child.slug))); // recurse
+      }
+
+      return slugs;
+    }
+
+    const allSlugs = [slug, ...(await getDescendantSlugs(slug))];
+
+    // Fetch all categories matching these slugs, including products
+    const categories = await prisma.category.findMany({
+      where: { slug: { in: allSlugs } },
       include: {
-        children: true,
         products: {
           include: {
             variants: {
@@ -62,7 +86,14 @@ export class CategoriesService {
         },
       },
     });
-    if (!category) throw new NotFoundException('Category not found');
-    return category;
+
+    if (!categories || categories.length === 0) {
+      throw new NotFoundException('Category not found');
+    }
+
+    // Optionally, merge products into one array
+    const allProducts = categories.flatMap((cat) => cat.products);
+
+    return allProducts;
   }
 }

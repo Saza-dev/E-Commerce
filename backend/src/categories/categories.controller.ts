@@ -15,19 +15,18 @@ import { CreateCategoryDto } from './dtos/create-category.dto';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 
-@UseGuards(JwtAuthGuard)
 @Controller()
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post('admin/categories')
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.createCategory(createCategoryDto);
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Put('admin/categories/:id')
   update(
@@ -37,14 +36,14 @@ export class CategoriesController {
     return this.categoriesService.updateCategory(Number(id), updateCategoryDto);
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Delete('admin/categories/:id')
   remove(@Param('id') id: string) {
     return this.categoriesService.deleteCategory(Number(id));
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Get('admin/categories')
   findAllAdmin() {
@@ -58,6 +57,6 @@ export class CategoriesController {
 
   @Get('categories/:slug')
   findOneBySlug(@Param('slug') slug: string) {
-    return this.categoriesService.getCategoryBySlug(slug);
+    return this.categoriesService.getCategoryProductsBySlug(slug);
   }
 }

@@ -15,7 +15,7 @@ export type SlugCategory = {
   slug: string;
   parentId: number | null;
   children?: Category[];
-  priducts: Product[];
+  products: Product[];
 };
 
 // Create Category
@@ -55,14 +55,14 @@ export async function listCategoriesAdmin(): Promise<Category[]> {
 
 // list categories users
 export async function listCategoriesUsers(): Promise<Category[]> {
-  const { data } = await http.get("/admin/categories");
+  const { data } = await http.get("/categories");
   return data;
 }
 
 // list categories users
-export async function listCategoriesBySlug(
+export async function listCategoryProductsBySlug(
   slug: string
-): Promise<SlugCategory> {
-  const { data } = await http.get(`/admin/categories/${slug}`);
+): Promise<Product[]> {
+  const { data } = await http.get(`/categories/${slug}`);
   return data;
 }

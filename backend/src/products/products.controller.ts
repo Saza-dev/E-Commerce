@@ -17,40 +17,38 @@ import { UpdateProductDto } from './dtos/update-product.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { UpdateVariantDto } from './dtos/update-variant.dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller()
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post('admin/products')
   createProduct(@Body() dto: CreateProductDto) {
     return this.productsService.createProduct(dto);
   }
-
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Put('admin/products/:id')
   updateProduct(@Param('id') id: string, @Body() dto: UpdateProductDto) {
     return this.productsService.updateProduct(+id, dto);
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Delete('admin/products/:id')
   deleteProduct(@Param('id') id: string) {
     return this.productsService.deleteProduct(+id);
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Get('admin/products')
   getAllProducts() {
     return this.productsService.getAllProducts();
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Put('admin/products/:id/variants/:variantId')
   updateVariant(

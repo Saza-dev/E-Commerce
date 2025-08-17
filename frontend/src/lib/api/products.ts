@@ -119,7 +119,7 @@ export async function listProducts(): Promise<Product[]> {
 }
 
 // List Products by Slug
-export async function listProductsBySlug(slug: string): Promise<Product> {
+export async function listProductBySlug(slug: string): Promise<Product> {
   const { data } = await http.get(`/products/${slug}`);
   return data;
 }
