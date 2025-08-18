@@ -1,17 +1,17 @@
 "use client";
 
-import type { SlugCategory } from "@/src/lib/api/categories";
 import ProductRow from "./ProductsRow";
+import type { Product } from "@/src/lib/api/products";
 
 export default function ProductsTable({
   categories,
 }: {
-  categories: SlugCategory[];
+  categories: Product[];
 }) {
   return (
-    <div>
-      {categories.map((products) => (
-        <ProductRow products={products} key={products.id} />
+    <div className="flex flex-col">
+      {categories.map((product) => (
+        <ProductRow product={product} key={product.id} />
       ))}
     </div>
   );

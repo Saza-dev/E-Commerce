@@ -45,7 +45,15 @@ export class CategoriesService {
       include: {
         children: {
           include: {
-            children: { include: { children: true } },
+            children: {
+              include: {
+                children: {
+                  include: {
+                    children: true,
+                  },
+                },
+              },
+            },
           },
         },
       },

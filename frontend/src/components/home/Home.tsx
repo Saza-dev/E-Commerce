@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import CategoryItem from "./CategoryItem";
 import { listProducts, type Product } from "@/src/lib/api/products";
+import ProductsTable from "./ProductsTable";
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -22,7 +23,7 @@ export default function Home() {
         const data = await listCategoriesUsers();
         const products = await listProducts();
         setCategories(data);
-        setProducts(products)
+        setProducts(products);
       } catch {
         toast.error("Failed to load categories");
       }
@@ -62,13 +63,7 @@ export default function Home() {
         ) : Products ? (
           <div>
             {Products.length > 0 ? (
-              <ul className="space-y-2">
-                {Products.map((product) => (
-                  <li key={product.id} className="p-2 rounded">
-                    {product.name} – ${product.variants[0].price}
-                  </li>
-                ))}
-              </ul>
+              <ProductsTable categories={Products} />
             ) : (
               <p>No products found.</p>
             )}
