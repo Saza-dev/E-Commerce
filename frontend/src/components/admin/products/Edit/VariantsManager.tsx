@@ -59,7 +59,12 @@ export default function VariantsManager({
         />
       ))}
 
-      <AddVariant productId={productId} />
+      <AddVariant
+        productId={productId}
+        onVariantAdded={(newVariant) =>
+          setVariantList((prev) => [...prev, newVariant])
+        }
+      />
     </div>
   );
 }

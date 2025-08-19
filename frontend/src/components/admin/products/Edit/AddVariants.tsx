@@ -19,9 +19,13 @@ const variantSchema = Yup.object({
 
 interface AddVariantProps {
   productId: number;
+  onVariantAdded?: (variant: any) => void;
 }
 
-export default function AddVariant({ productId }: AddVariantProps) {
+export default function AddVariant({
+  productId,
+  onVariantAdded,
+}: AddVariantProps) {
   return (
     <Formik
       initialValues={{
@@ -43,14 +47,15 @@ export default function AddVariant({ productId }: AddVariantProps) {
             price: values.price,
             quantity: values.quantity,
             status: values.status,
-            images: values.images.filter((url) => url.trim() !== "")
+            images: values.images.filter((url) => url.trim() !== ""),
           };
-        
-          console.log(payload)
+
+          console.log(payload);
           const variant = await createVariant(payload);
           if (variant) {
             toast.success("Variant Created Successfully");
             resetForm();
+            onVariantAdded?.(variant);
           } else {
             toast.error("Failed to create variant");
           }
@@ -154,10 +159,7 @@ export default function AddVariant({ productId }: AddVariantProps) {
                         {errors.images}
                       </div>
                     )}
-                    <Button
-                      type="button"
-                      onClick={() => push("")}
-                    >
+                    <Button type="button" onClick={() => push("")}>
                       Add Image
                     </Button>
                   </div>
