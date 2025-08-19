@@ -12,6 +12,7 @@ import { AddressesModule } from './addresses/addresses.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
+import { VariantsModule } from './variants/varinats.module';
 
 const throttlers =
   process.env.NODE_ENV === 'production'
@@ -38,6 +39,7 @@ const throttlers =
     ProfilesModule,
     CategoriesModule,
     ProductsModule,
+    VariantsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

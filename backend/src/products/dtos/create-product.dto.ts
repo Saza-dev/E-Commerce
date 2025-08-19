@@ -6,7 +6,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateVariantDto } from './create-variant.dto';
+import { CreateVariantDto } from 'src/variants/dtos/create-variant.dto';
+
 
 export class CreateProductDto {
   @IsNotEmpty()

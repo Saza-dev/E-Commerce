@@ -15,7 +15,6 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
-import { UpdateVariantDto } from './dtos/update-variant.dto';
 
 @Controller()
 export class ProductsController {
@@ -48,21 +47,6 @@ export class ProductsController {
     return this.productsService.getAllProducts();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
-  @Put('admin/products/:id/variants/:variantId')
-  updateVariant(
-    @Param('id') productId: string,
-    @Param('variantId') variantId: string,
-    @Body() dto: UpdateVariantDto,
-  ) {
-    return this.productsService.updateVariant(
-      Number(productId),
-      Number(variantId),
-      dto,
-    );
-  }
-
   @Get('products')
   getProducts(
     @Query('category') category?: string,
@@ -83,10 +67,5 @@ export class ProductsController {
   @Get('products/:slug')
   getProductBySlug(@Param('slug') slug: string) {
     return this.productsService.getProductBySlug(slug);
-  }
-
-  @Get('products/:id/variant/:variantId/images')
-  getVariantImages(@Param('variantId') variantId: string) {
-    return this.productsService.getVariantImages(Number(variantId));
   }
 }

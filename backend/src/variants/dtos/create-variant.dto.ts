@@ -13,6 +13,10 @@ export class CreateVariantDto {
   size: string;
 
   @IsString()
+  @IsOptional()
+  productId: number;
+
+  @IsString()
   color: string;
 
   @IsNumber()
