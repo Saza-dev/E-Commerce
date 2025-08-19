@@ -18,7 +18,7 @@ export type Variant = {
   color: string;
   price: number;
   quantity: number;
-  status: string;
+  status: "IN_STOCK" | "PRE_ORDER" | "OUT_OF_STOCK";
   images: Image[];
 };
 
@@ -49,20 +49,12 @@ export async function createProduct(payload: {
 
 // Update Product
 export async function updateProduct(
-  id: string,
+  id: number,
   payload: {
     name?: string;
     description?: string;
     slug?: string;
     categoryId?: number;
-    variants?: {
-      size?: string;
-      color?: string;
-      price?: number;
-      quantity?: number;
-      status?: "IN_STOCK" | "PRE_ORDER" | "OUT_OF_STOCK";
-      images?: string[];
-    }[];
   }
 ) {
   const { data } = await http.put(`/admin/products/${id}`, payload);
@@ -78,15 +70,15 @@ export async function updateProduct(
 }
 
 // Delete Product
-export async function deleteProduct(id: string): Promise<{ success: true }> {
+export async function deleteProduct(id: number): Promise<{ success: true }> {
   const { data } = await http.delete(`/admin/products/${id}`);
   return data;
 }
 
 // Update Variant
 export async function updateVariant(
-  prodId: string,
-  variantId: string,
+  prodId: number,
+  variantId: number,
   payload: {
     size?: string;
     color?: string;
