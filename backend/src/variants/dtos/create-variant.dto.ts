@@ -12,7 +12,7 @@ export class CreateVariantDto {
   @IsString()
   size: string;
 
-  @IsString()
+  @IsInt()
   @IsOptional()
   productId: number;
 

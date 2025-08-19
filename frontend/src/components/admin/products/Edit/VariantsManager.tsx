@@ -1,9 +1,11 @@
-'use client'
+"use client";
 
-import { updateVariant, type Variant } from "@/src/lib/api/products";
+import { updateVariant } from "@/src/lib/api/products";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import VariantForm from "./VariantForm";
+import { deleteVariant, Variant } from "@/src/lib/api/variants";
+import AddVariant from "./AddVariants";
 
 export default function VariantsManager({
   productId,
@@ -12,7 +14,6 @@ export default function VariantsManager({
   productId: number;
   variants: Variant[];
 }) {
-  
   const [variantList, setVariantList] = useState(variants);
 
   const handleUpdate = async (
@@ -35,32 +36,15 @@ export default function VariantsManager({
     }
   };
 
-  //   const handleDelete = async (variantId: number) => {
-  //     try {
-  //       await deleteVariant(variantId);
-  //       setVariantList((prev) => prev.filter((v) => v.id !== variantId));
-  //       toast.success("Variant deleted");
-  //     } catch {
-  //       toast.error("Failed to delete variant");
-  //     }
-  //   };
-
-  //   const handleAdd = async () => {
-  //     try {
-  //       const newVariant = await createVariant(productId, {
-  //         size: "",
-  //         color: "",
-  //         price: 0,
-  //         quantity: 0,
-  //         status: "IN_STOCK",
-  //         images: [],
-  //       });
-  //       setVariantList((prev) => [...prev, newVariant]);
-  //       toast.success("Variant added");
-  //     } catch {
-  //       toast.error("Failed to add variant");
-  //     }
-  //   };
+  const handleDelete = async (variantId: number) => {
+    try {
+      await deleteVariant(variantId);
+      setVariantList((prev) => prev.filter((v) => v.id !== variantId));
+      toast.success("Variant deleted");
+    } catch {
+      toast.error("Failed to delete variant");
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -71,12 +55,11 @@ export default function VariantsManager({
           variant={variant}
           onUpdate={handleUpdate}
           productId={productId}
-          //   onDelete={handleDelete}
+          onDelete={handleDelete}
         />
       ))}
-      {/* <Button type="button" onClick={handleAdd}>
-        Add Variant
-      </Button> */}
+
+      <AddVariant productId={productId} />
     </div>
   );
 }

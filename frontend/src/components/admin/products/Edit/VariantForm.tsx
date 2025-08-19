@@ -1,14 +1,15 @@
 import Button from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
-import type { Variant } from "@/src/lib/api/products";
+import { Variant } from "@/src/lib/api/variants";
+
 import { Field, FieldArray, Form, Formik } from "formik";
 
 export default function VariantForm({
   productId,
   variant,
   onUpdate,
-}: //   onDelete,
-{
+  onDelete,
+}: {
   productId: number;
   variant: Variant;
   onUpdate: (
@@ -23,7 +24,7 @@ export default function VariantForm({
       images?: string[];
     }
   ) => void;
-  //   onDelete: (id: number) => void;
+  onDelete: (id: number) => void;
 }) {
   return (
     <Formik
@@ -38,9 +39,8 @@ export default function VariantForm({
       onSubmit={(values) =>
         onUpdate(productId, variant.id, {
           ...values,
-          images: values.images.map((img) => img.url), 
-        }
-      )
+          images: values.images.map((img) => img.url),
+        })
       }
     >
       {({ values }) => (
@@ -94,9 +94,9 @@ export default function VariantForm({
 
           <div className="flex gap-2 justify-end">
             <Button type="submit">Save</Button>
-            {/* <Button type="button" onClick={() => onDelete(variant.id)}>
+            <Button type="button" onClick={() => onDelete(variant.id)}>
               Delete
-            </Button> */}
+            </Button>
           </div>
         </Form>
       )}

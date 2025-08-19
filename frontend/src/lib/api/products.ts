@@ -1,4 +1,5 @@
 import http from "../http/axios";
+import type { Variant } from "./variants";
 
 export type Product = {
   id: number;
@@ -11,22 +12,7 @@ export type Product = {
   variants: Variant[];
 };
 
-export type Variant = {
-  id: number;
-  productId: number;
-  size: string;
-  color: string;
-  price: number;
-  quantity: number;
-  status: "IN_STOCK" | "PRE_ORDER" | "OUT_OF_STOCK";
-  images: Image[];
-};
 
-export type Image = {
-  id: number;
-  variantId: number;
-  url: string;
-};
 
 // Create Product
 export async function createProduct(payload: {
