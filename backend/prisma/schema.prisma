@@ -26,6 +26,7 @@ model User {
   phone        String?
   role         Role       @default(CUSTOMER)
   status       UserStatus @default(ACTIVE)
+  cart         Cart?
 
   // housekeeping
   createdAt DateTime @default(now())
@@ -118,47 +119,46 @@ model CustomerProfile {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-
-
-
 model Category {
-  id        Int        @id @default(autoincrement())
-  name      String
-  slug      String     @unique
-  parentId  Int?       // For subcategories
-  parent    Category?  @relation("CategoryToSubcategory", fields: [parentId], references: [id])
-  children  Category[] @relation("CategoryToSubcategory")
-  products  Product[]
+  id       Int        @id @default(autoincrement())
+  name     String
+  slug     String     @unique
+  parentId Int? // For subcategories
+  parent   Category?  @relation("CategoryToSubcategory", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryToSubcategory")
+  products Product[]
 }
 
 model Product {
-  id           Int             @id @default(autoincrement())
-  name         String
-  description  String
-  slug         String          @unique
-  categoryId   Int
-  category     Category        @relation(fields: [categoryId], references: [id])
-  variants     ProductVariant[]
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  id          Int              @id @default(autoincrement())
+  name        String
+  description String
+  slug        String           @unique
+  categoryId  Int
+  category    Category         @relation(fields: [categoryId], references: [id])
+  variants    ProductVariant[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  CartItem    CartItem[]
 }
 
 model ProductVariant {
-  id         Int           @id @default(autoincrement())
-  productId  Int
-  product    Product       @relation(fields: [productId], references: [id],onDelete: Cascade)
-  size       String
-  color      String
-  price      Float
-  quantity   Int
-  status     StockStatus   @default(IN_STOCK)
-  images     ProductImage[] 
+  id        Int            @id @default(autoincrement())
+  productId Int
+  product   Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      String
+  color     String
+  price     Float
+  quantity  Int
+  status    StockStatus    @default(IN_STOCK)
+  images    ProductImage[]
+  CartItem  CartItem[]
 }
 
 model ProductImage {
-  id        Int           @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   variantId Int
-  variant   ProductVariant @relation(fields: [variantId], references: [id],onDelete: Cascade)
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
   url       String
 }
 
@@ -166,4 +166,24 @@ enum StockStatus {
   IN_STOCK
   OUT_OF_STOCK
   PRE_ORDER
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String     @unique
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        Int            @id @default(autoincrement())
+  cart      Cart           @relation(fields: [cartId], references: [id])
+  cartId    Int
+  product   Product        @relation(fields: [productId], references: [id])
+  productId Int
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+  variantId Int
+  quantity  Int            @default(1)
 }
