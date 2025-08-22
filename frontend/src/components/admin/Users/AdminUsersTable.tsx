@@ -7,7 +7,6 @@ import AdminUserRow from "./AdminUserRow";
 import Button from "@/src/components/ui/button";
 import { Input, Label } from "@/src/components/ui/input";
 import toast from "react-hot-toast";
-
 import clsx from "clsx";
 import CreateAdminModal from "./CreateAdminModal";
 
@@ -50,8 +49,8 @@ export default function AdminUsersTable() {
   };
 
   useEffect(() => {
-    load(); /* eslint-disable-next-line */
-  }, [query.page, query.pageSize, query.sortBy, query.sortDir]);
+    load();
+  }, [query.page, query.pageSize, query.sortBy, query.sortDir, query.q]);
 
   const onUpdated = (upd: AdminUser) => {
     setItems((prev) => prev.map((x) => (x.id === upd.id ? upd : x)));

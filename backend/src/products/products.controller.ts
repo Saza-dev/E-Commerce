@@ -47,8 +47,8 @@ export class ProductsController {
     return this.productsService.getAllProducts();
   }
 
-  @Get('products')
-  getProducts(
+  @Get('filteredProducts')
+  getFilteredProducts(
     @Query('category') category?: string,
     @Query('size') size?: string,
     @Query('color') color?: string,
@@ -62,6 +62,11 @@ export class ProductsController {
       minPrice,
       maxPrice,
     });
+  }
+
+  @Get('products')
+  getProducts() {
+    return this.productsService.getAllProducts();
   }
 
   @Get('products/:slug')

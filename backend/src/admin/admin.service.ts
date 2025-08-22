@@ -112,13 +112,11 @@ export class AdminService {
   }
 
   async deleteUser(userId: string) {
-    // clean up dependent rows then delete user
     await this.prisma.$transaction(async (tx) => {
       await tx.refreshToken.deleteMany({ where: { userId } }).catch(() => {});
       await tx.passwordResetToken
         ?.deleteMany?.({ where: { userId } })
         .catch(() => {});
-      // Addresses & CustomerProfile use onDelete: Cascade in your schema
       await tx.user.delete({ where: { id: userId } });
     });
     return { success: true };

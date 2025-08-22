@@ -1,10 +1,7 @@
 "use client";
 
-import {
-  listProductBySlug,
-  type Variant,
-  type Product,
-} from "@/src/lib/api/products";
+import { listProductBySlug, type Product } from "@/src/lib/api/products";
+import type { Variant } from "@/src/lib/api/variants";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -14,14 +11,14 @@ interface PageProps {
 
 export default function Product({ slug }: PageProps) {
   const [product, setProduct] = useState<Product | null>(null);
-  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null); 
+  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
 
   useEffect(() => {
     (async () => {
       try {
         const products = await listProductBySlug(slug);
         setProduct(products);
-        setSelectedVariant(products.variants[0]); //default variant
+        setSelectedVariant(products.variants[0]);
       } catch {
         toast.error("Failed to load Product");
       }
