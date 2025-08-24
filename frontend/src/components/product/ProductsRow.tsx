@@ -17,7 +17,7 @@ export default function ProductRow({ product }: { product: Product }) {
           key={product.id}
           src={product.variants?.[0]?.images?.[0]?.url ?? "/placeholder.png"}
           alt={product.variants?.[0]?.color ?? "No color"}
-          width={280}
+          width={250}
           height={200}
         />
       </div>
