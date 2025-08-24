@@ -62,7 +62,7 @@ export default function Cart({ userId }: CartProps) {
 
   return (
     <div className="p-6 w-full h-full flex flex-col items-center justify-center">
-      <h1 className="text-2xl mb-4">Your Cart</h1>
+      <h1 className="text-[30px] font-[500] mb-16">Your Cart</h1>
       {items.length === 0 && <p>Cart is empty.</p>}
       {items.map((item) => (
         <div
@@ -79,25 +79,54 @@ export default function Cart({ userId }: CartProps) {
             />
           </div>
           <div>
-            <p>{item.product?.name}</p>
-            <p>
-              Variant: {item.variant?.color}, {item.variant?.size}
-            </p>
-            <p>Price: ${item.variant?.price}</p>
+            <div className="font-[600]">{item.product?.name}</div>
+            <div className="flex gap-2 mt-2 text-gray-500">
+              <span className="px-3 py-1 border text-[12px] rounded-md font-medium bg-gray-100">
+                {item.variant?.size}
+              </span>
+            </div>
+            <div className="text-gray-500 text-[12px]">
+              {item.variant?.color}
+            </div>
+            <div className="text-[14px] font-[700]">
+              {" "}
+              LKR {item.variant?.price}
+            </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Decrease button */}
+            <button
+              onClick={() =>
+                item.quantity > 1 && updateQuantity(item.id, item.quantity - 1)
+              }
+              className="bg-gray-200 w-10 h-10 text-[20px] font-[700] rounded hover:bg-gray-300"
+            >
+              -
+            </button>
+
+            {/* Quantity input */}
             <input
               type="number"
               min={1}
               value={item.quantity}
               onChange={(e) =>
-                updateQuantity(item.id, parseInt(e.target.value))
+                updateQuantity(item.id, parseInt(e.target.value) || 1)
               }
-              className="w-16 border rounded p-1"
+              className="h-10 w-16 pl-4 border rounded text-center"
             />
+
+            {/* Increase button */}
+            <button
+              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+              className="bg-gray-200 w-10 h-10 text-[20px] font-[700] rounded hover:bg-gray-300"
+            >
+              +
+            </button>
+
+            {/* Remove button */}
             <button
               onClick={() => removeItem(item.id)}
-              className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+              className="bg-red-600 text-white w-[90px] h-10 rounded hover:bg-red-700"
             >
               Remove
             </button>
@@ -106,10 +135,12 @@ export default function Cart({ userId }: CartProps) {
       ))}
 
       <div className="flex w-full max-w-5xl justify-end">
-        {" "}
-        <div className="flex flex-col">
-          <h2 className="text-xl mt-4">Total: ${totalPrice.toFixed(2)}</h2>
-          <Button>CheckOut</Button>
+        <div className="flex flex-col gap-5 mt-10">
+          <div className="flex gap-4 items-center">
+            <h2 className="text-xl font-[500]">Total : </h2>
+            <h2 className="text-[14px] font-[500] text-gray-600">LKR {totalPrice.toFixed(2)}</h2>
+          </div>
+          <Button className="w-[150px] h-[50px]">CheckOut</Button>
         </div>
       </div>
     </div>
