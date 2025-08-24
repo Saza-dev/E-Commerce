@@ -9,7 +9,7 @@ export type Product = {
   categoryId: number;
   createdAt: string;
   updatedAt: string;
-  variants: Variant[];
+  variants?: Variant[];
 };
 
 

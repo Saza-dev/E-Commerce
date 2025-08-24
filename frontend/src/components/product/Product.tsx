@@ -4,6 +4,8 @@ import { listProductBySlug, type Product } from "@/src/lib/api/products";
 import type { Variant } from "@/src/lib/api/variants";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import AddToCartButton from "../cart/AddToCartButton";
+import { useAuth } from "@/src/contexts/AuthContext";
 
 interface PageProps {
   slug: string;
@@ -12,13 +14,16 @@ interface PageProps {
 export default function Product({ slug }: PageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const { user } = useAuth();
+  const userId = user?.id;
 
   useEffect(() => {
     (async () => {
       try {
         const products = await listProductBySlug(slug);
         setProduct(products);
-        setSelectedVariant(products.variants[0]);
+        setSelectedVariant(products.variants?.[0] || null);
       } catch {
         toast.error("Failed to load Product");
       }
@@ -28,7 +33,7 @@ export default function Product({ slug }: PageProps) {
   if (!product || !selectedVariant) return <p>Loading...</p>;
 
   const handleVariantSelect = (color: string) => {
-    const variant = product.variants.find((v) => v.color === color);
+    const variant = product.variants?.find((v) => v.color === color);
     if (variant) setSelectedVariant(variant);
   };
 
@@ -43,7 +48,7 @@ export default function Product({ slug }: PageProps) {
 
       <div>
         <h3>Choose a color:</h3>
-        {product.variants.map((variant) => (
+        {product.variants?.map((variant) => (
           <button
             key={variant.id}
             onClick={() => handleVariantSelect(variant.color)}
@@ -74,6 +79,27 @@ export default function Product({ slug }: PageProps) {
             height={100}
           />
         ))}
+      </div>
+
+      <div>
+        <h3>Quantity:</h3>
+        <input
+          type="number"
+          min={1}
+          max={selectedVariant.quantity}
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          style={{ width: "60px", marginRight: "8px" }}
+        />
+      </div>
+
+      <div>
+        <AddToCartButton
+          userId={userId}
+          productId={product.id}
+          variantId={selectedVariant.id}
+          quantity={quantity}
+        />
       </div>
     </div>
   );

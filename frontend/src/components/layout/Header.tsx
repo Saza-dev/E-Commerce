@@ -6,6 +6,7 @@ import { useAuth } from "@/src/contexts/AuthContext";
 
 export default function AppHeader() {
   const { user, authenticated, logout } = useAuth();
+  const userId = user?.id;
 
   return (
     <header className="border-b bg-white">
@@ -33,6 +34,9 @@ export default function AppHeader() {
             </Link>
             <Link href="/addresses">
               <Button variant="ghost">My Addresses</Button>
+            </Link>
+            <Link href={`/cart/${userId}`}>
+              <Button variant="ghost">Cart</Button>
             </Link>
             {user?.role === "ADMIN" && (
               <>

@@ -11,7 +11,18 @@ export class CartService {
   async getCart(userId: string) {
     const cart = await this.prisma.cart.findUnique({
       where: { userId },
-      include: { items: { include: { product: true, variant: true } } },
+      include: {
+        items: {
+          include: {
+            product: true,
+            variant: {
+              include: {
+                images: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!cart) {
@@ -53,7 +64,6 @@ export class CartService {
   async updateCart(userId: string, dto: UpdateCartDto) {
     const cart = await this.prisma.cart.findUnique({ where: { userId } });
     if (!cart) throw new Error('Cart not found');
-    console.log(cart)
     return this.prisma.cartItem.update({
       where: { id: dto.itemId },
       data: { quantity: dto.quantity },

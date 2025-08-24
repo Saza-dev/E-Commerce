@@ -20,22 +20,26 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Get('/:id')
-  getCart(@Param('id') userId: string) {
+  async getCart(@Param('id') userId: string) {
     return this.cartService.getCart(userId);
   }
 
   @Post('add/:id')
-  addToCart(@Param('id') userId: string, @Body() dto: AddToCartDto) {
+  async addToCart(@Param('id') userId: string, @Body() dto: AddToCartDto) {
     return this.cartService.addToCart(userId, dto);
   }
 
   @Patch('update/:id')
-  updateCart(@Param('id') userId: string, @Body() dto: UpdateCartDto) {
+  async updateCart(@Param('id') userId: string, @Body() dto: UpdateCartDto) {
     return this.cartService.updateCart(userId, dto);
   }
 
   @Delete('remove/:id')
-  removeFromCart(@Param('id') userId: string, @Body() dto: RemoveFromCartDto) {
-    return this.cartService.removeFromCart(userId, dto);
+  async removeFromCart(
+    @Param('id') userId: string,
+    @Body() dto: RemoveFromCartDto,
+  ) {
+    await this.cartService.removeFromCart(userId, dto);
+    return { success: true };
   }
 }
