@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Protected from "@/src/components/auth/Protected";
 import Button from "@/src/components/ui/button";
 import Modal from "@/src/components/ui/modal";
 import AddressCard from "@/src/components/address/AddressCard";
@@ -18,7 +17,7 @@ import AddressForm, {
   AddressFormValues,
 } from "@/src/components/forms/AddressForm";
 
-function AddressesInner() {
+export default function AddressesInner() {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<Address[]>([]);
 
@@ -154,7 +153,7 @@ function AddressesInner() {
           No addresses yet. Add your first address.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {items.map((a) => (
             <AddressCard
               key={a.id}
@@ -207,13 +206,5 @@ function AddressesInner() {
         )}
       </Modal>
     </div>
-  );
-}
-
-export default function AddressesPage() {
-  return (
-    <Protected>
-      <AddressesInner />
-    </Protected>
   );
 }

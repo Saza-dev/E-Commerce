@@ -1,3 +1,4 @@
+import Protected from "@/src/components/auth/Protected";
 import Cart from "@/src/components/cart/Cart";
 
 interface PageProps {
@@ -7,5 +8,9 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { userId } = await params;
 
-  return <Cart userId={userId} />;
+  return (
+    <Protected>
+      <Cart userId={userId} />;
+    </Protected>
+  );
 }

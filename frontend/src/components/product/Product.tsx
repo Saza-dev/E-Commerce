@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import AddToCartButton from "../cart/AddToCartButton";
 import { useAuth } from "@/src/contexts/AuthContext";
+import Button from "../ui/button";
 
 interface PageProps {
   slug: string;
@@ -16,6 +17,8 @@ export default function Product({ slug }: PageProps) {
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
   const [quantity, setQuantity] = useState(1);
   const { user } = useAuth();
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const userId = user?.id;
 
   useEffect(() => {
@@ -23,19 +26,36 @@ export default function Product({ slug }: PageProps) {
       try {
         const products = await listProductBySlug(slug);
         setProduct(products);
-        setSelectedVariant(products.variants?.[0] || null);
+        const firstVariant = products.variants?.[0] || null;
+        setSelectedVariant(firstVariant);
+        setSelectedColor(firstVariant?.color || null);
+        setSelectedSize(firstVariant?.size || null);
       } catch {
         toast.error("Failed to load Product");
       }
     })();
   }, [slug]);
 
-  if (!product || !selectedVariant) return <p>Loading...</p>;
+  useEffect(() => {
+    if (product && selectedColor && selectedSize) {
+      const variant = product.variants?.find(
+        (v) => v.color === selectedColor && v.size === selectedSize
+      );
+      if (variant) setSelectedVariant(variant);
+    }
+  }, [selectedColor, selectedSize, product]);
 
-  const handleVariantSelect = (color: string) => {
-    const variant = product.variants?.find((v) => v.color === color);
-    if (variant) setSelectedVariant(variant);
-  };
+  const uniqueColors = [...new Set(product?.variants?.map((v) => v.color))];
+
+  const uniqueSizes = [
+    ...new Set(
+      product?.variants
+        ?.filter((v) => v.color === selectedColor)
+        .map((v) => v.size)
+    ),
+  ];
+
+  if (!product || !selectedVariant) return <p>Loading...</p>;
 
   return (
     <div>
@@ -48,25 +68,29 @@ export default function Product({ slug }: PageProps) {
 
       <div>
         <h3>Choose a color:</h3>
-        {product.variants?.map((variant) => (
-          <button
-            key={variant.id}
-            onClick={() => handleVariantSelect(variant.color)}
-            style={{
-              marginRight: "8px",
-              backgroundColor: variant.color.toLowerCase(),
-              color: "white",
-              padding: "5px 10px",
-              border:
-                selectedVariant.color === variant.color
-                  ? "2px solid black"
-                  : "none",
-            }}
+        {uniqueColors.map((color) => (
+          <Button
+            key={color}
+            onClick={() => setSelectedColor(color)}
           >
-            {variant.color}
-          </button>
+            {color}
+          </Button>
         ))}
       </div>
+
+      {selectedColor && (
+        <div>
+          <h3>Choose a size:</h3>
+          {uniqueSizes.map((size) => (
+            <Button
+              key={size}
+              onClick={() => setSelectedSize(size)}
+            >
+              {size}
+            </Button>
+          ))}
+        </div>
+      )}
 
       <div>
         <h3>Images:</h3>

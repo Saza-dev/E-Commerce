@@ -15,6 +15,8 @@ export default function ProductsTable({
     pageSize: 10,
   });
 
+
+
   const totalPages = useMemo(
     () => Math.max(1, Math.ceil(categories.length / (query.pageSize || 10))),
     [categories.length, query.pageSize]
@@ -28,9 +30,11 @@ export default function ProductsTable({
 
   return (
     <div className="flex flex-col items-center w-full">
-      {paginatedProducts.map((product) => (
-        <ProductRow product={product} key={product.id} />
-      ))}
+      <div className="grid grid-cols-3">
+        {paginatedProducts.map((product) => (
+          <ProductRow product={product} key={product.id} />
+        ))}
+      </div>
 
       <div className="mt-4 flex items-center  justify-between w-[1200px]">
         <div className="text-sm text-gray-600">

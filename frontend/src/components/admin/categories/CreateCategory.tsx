@@ -90,7 +90,7 @@ export default function CreateCategory({
               />
             </div>
             <div>
-              <Label htmlFor="parentId">Slug</Label>
+              <Label htmlFor="parentId">Category ID</Label>
               <Field
                 as={Input}
                 id="parentId"
