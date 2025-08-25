@@ -8,6 +8,7 @@ interface AddToCartButtonProps {
   productId: number;
   variantId: number;
   quantity: number;
+  disabled?: boolean;
 }
 
 export default function AddToCartButton({
@@ -15,6 +16,7 @@ export default function AddToCartButton({
   variantId,
   userId,
   quantity,
+  disabled,
 }: AddToCartButtonProps) {
   const [loading, setLoading] = useState(false);
 
@@ -38,10 +40,15 @@ export default function AddToCartButton({
   return (
     <button
       onClick={handleAdd}
-      disabled={loading}
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      disabled={disabled || loading}
+      className={`px-4 py-2 rounded 
+    ${
+      disabled
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-blue-600 hover:bg-blue-700 text-white"
+    }`}
     >
-      {loading ? "Adding..." : "Add to Cart"}
+      {disabled ? "Out of Stock" : loading ? "Adding..." : "Add to Cart"}
     </button>
   );
 }

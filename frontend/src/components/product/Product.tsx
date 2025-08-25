@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import AddToCartButton from "../cart/AddToCartButton";
 import { useAuth } from "@/src/contexts/AuthContext";
-import Button from "../ui/button";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 interface PageProps {
   slug: string;
@@ -58,72 +59,123 @@ export default function Product({ slug }: PageProps) {
   if (!product || !selectedVariant) return <p>Loading...</p>;
 
   return (
-    <div>
-      <h1>{product.name}</h1>
-      <p>{product.description}</p>
-      <p>Price: ${selectedVariant.price}</p>
-      <p>Size: {selectedVariant.size}</p>
-      <p>Status: {selectedVariant.status}</p>
-      <p>Quantity: {selectedVariant.quantity}</p>
-
-      <div>
-        <h3>Choose a color:</h3>
-        {uniqueColors.map((color) => (
-          <Button
-            key={color}
-            onClick={() => setSelectedColor(color)}
-          >
-            {color}
-          </Button>
-        ))}
+    <div className="flex justify-evenly">
+      <div className="w-[500px]">
+        <Swiper spaceBetween={10} slidesPerView={1} className="rounded-lg">
+          {selectedVariant.images.map((img) => (
+            <SwiperSlide key={img.id}>
+              <img
+                src={img.url}
+                alt={selectedVariant.color}
+                className="w-full h-auto object-cover"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
+      <div className="w-1/2 flex flex-col gap-4">
+        <h1 className="text-[30px] font-[500]">{product.name}</h1>
+        <p className="w-[800px]">{product.description}</p>
+        <p className="font-[700]">Price: {selectedVariant.price} LKR</p>
+        <p
+          className={`font-[700] ${
+            selectedVariant.status === "OUT_OF_STOCK"
+              ? "text-red-500"
+              : "text-black"
+          }`}
+        >
+          Status: {selectedVariant.status}
+        </p>
 
-      {selectedColor && (
-        <div>
-          <h3>Choose a size:</h3>
-          {uniqueSizes.map((size) => (
-            <Button
-              key={size}
-              onClick={() => setSelectedSize(size)}
+        <p className="font-[700]">Quantity: {selectedVariant.quantity}</p>
+
+        <div className="flex gap-5 items-center">
+          <h3 className="font-[700]">Choose a color:</h3>
+          {uniqueColors.map((color) => (
+            <button
+              className={`border rounded-[10px] w-[80px] h-[40px] 
+    ${
+      selectedColor === color
+        ? "border-black text-black"
+        : "border-gray-400 text-gray-400"
+    }`}
+              key={color}
+              onClick={() => setSelectedColor(color)}
             >
-              {size}
-            </Button>
+              {color}
+            </button>
           ))}
         </div>
-      )}
 
-      <div>
-        <h3>Images:</h3>
-        {selectedVariant.images.map((img) => (
-          <img
-            key={img.id}
-            src={img.url}
-            alt={selectedVariant.color}
-            width={100}
-            height={100}
+        {selectedColor && (
+          <div className="flex gap-5 items-center ">
+            <h3 className="font-[700] mr-[10px]">Choose a size:</h3>
+            {uniqueSizes.map((size) => (
+              <button
+                className={`border rounded-[10px] w-[80px] h-[40px] 
+    ${
+      selectedSize === size
+        ? "border-black text-black"
+        : "border-gray-400 text-gray-400"
+    }`}
+                key={size}
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="flex gap-10 items-center">
+          <h3 className="font-[700]">Quantity:</h3>
+          <div className="flex items-center gap-2">
+            {/* Minus button */}
+            <button
+              type="button"
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              className="w-[40px] h-[40px] border border-gray-400 rounded text-lg font-bold"
+            >
+              -
+            </button>
+
+            {/* Input field */}
+            <input
+              type="number"
+              min={1}
+              max={selectedVariant.quantity}
+              value={quantity}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value >= 1 && value <= selectedVariant.quantity) {
+                  setQuantity(value);
+                }
+              }}
+              className="w-[80px] h-[40px] pl-4 text-center  border border-gray-300 rounded"
+            />
+
+            {/* Plus button */}
+            <button
+              type="button"
+              onClick={() =>
+                setQuantity((q) => Math.min(selectedVariant.quantity, q + 1))
+              }
+              className="w-[40px] h-[40px] border border-gray-400 rounded text-lg font-bold"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-5">
+          <AddToCartButton
+            userId={userId}
+            productId={product.id}
+            variantId={selectedVariant.id}
+            quantity={quantity}
+            disabled={selectedVariant.status === "OUT_OF_STOCK"}
           />
-        ))}
-      </div>
-
-      <div>
-        <h3>Quantity:</h3>
-        <input
-          type="number"
-          min={1}
-          max={selectedVariant.quantity}
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          style={{ width: "60px", marginRight: "8px" }}
-        />
-      </div>
-
-      <div>
-        <AddToCartButton
-          userId={userId}
-          productId={product.id}
-          variantId={selectedVariant.id}
-          quantity={quantity}
-        />
+        </div>
       </div>
     </div>
   );
