@@ -59,7 +59,7 @@ export default function Product({ slug }: PageProps) {
   if (!product || !selectedVariant) return <p>Loading...</p>;
 
   return (
-    <div className="flex justify-evenly">
+    <div className="flex justify-evenly mt-10">
       <div className="w-[500px]">
         <Swiper spaceBetween={10} slidesPerView={1} className="rounded-lg">
           {selectedVariant.images.map((img) => (
