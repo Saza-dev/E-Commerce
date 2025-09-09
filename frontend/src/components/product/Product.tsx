@@ -27,10 +27,23 @@ export default function Product({ slug }: PageProps) {
       try {
         const products = await listProductBySlug(slug);
         setProduct(products);
-        const firstVariant = products.variants?.[0] || null;
-        setSelectedVariant(firstVariant);
-        setSelectedColor(firstVariant?.color || null);
-        setSelectedSize(firstVariant?.size || null);
+
+        if (products.variants && products.variants.length > 0) {
+          const firstVariant = products.variants[0];
+          setSelectedVariant(firstVariant);
+          setSelectedColor(firstVariant?.color || null);
+          const sizeOrder = ["XS", "S", "M", "L", "XL", "XXL"];
+          const sizes = [
+            ...new Set(
+              products.variants
+                ?.filter((v) => v.color === firstVariant?.color)
+                .map((v) => v.size)
+            ),
+          ].sort((a, b) => sizeOrder.indexOf(a) - sizeOrder.indexOf(b));
+
+          // pick the smallest one
+          setSelectedSize(sizes[0] || null);
+        }
       } catch {
         toast.error("Failed to load Product");
       }
@@ -48,13 +61,15 @@ export default function Product({ slug }: PageProps) {
 
   const uniqueColors = [...new Set(product?.variants?.map((v) => v.color))];
 
+  const sizeOrder = ["XS", "S", "M", "L", "XL", "XXL"];
+
   const uniqueSizes = [
     ...new Set(
       product?.variants
         ?.filter((v) => v.color === selectedColor)
         .map((v) => v.size)
     ),
-  ];
+  ].sort((a, b) => sizeOrder.indexOf(a) - sizeOrder.indexOf(b));
 
   if (!product || !selectedVariant) return <p>Loading...</p>;
 

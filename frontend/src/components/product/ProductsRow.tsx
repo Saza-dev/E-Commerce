@@ -3,9 +3,13 @@ import Link from "next/link";
 
 export default function ProductRow({ product }: { product: Product }) {
   const uniqueColors = [...new Set(product?.variants?.map((v) => v.color))];
+
+  // Define order for sizes
+  const sizeOrder = ["XS", "S", "M", "L", "XL", "XXL"];
+
   const uniqueSizes = [
-    ...new Set(product?.variants?.filter((v) => v.color).map((v) => v.size)),
-  ];
+    ...new Set(product?.variants?.filter((v) => v.size).map((v) => v.size)),
+  ].sort((a, b) => sizeOrder.indexOf(a) - sizeOrder.indexOf(b));
 
   return (
     <Link
@@ -33,8 +37,12 @@ export default function ProductRow({ product }: { product: Product }) {
             </span>
           ))}
         </div>
-        <div className="text-gray-500 text-[12px]">{uniqueColors.length} Colors</div>
-        <div className="text-[14px] font-[700]"> LKR {product.variants?.[0]?.price}</div>
+        <div className="text-gray-500 text-[12px]">
+          {uniqueColors.length} Colors
+        </div>
+        <div className="text-[14px] font-[700]">
+          LKR {product.variants?.[0]?.price}
+        </div>
       </div>
     </Link>
   );
