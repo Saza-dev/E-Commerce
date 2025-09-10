@@ -8,6 +8,7 @@ A full-featured e-commerce application built with Next.js (frontend) and NestJS 
 - `Users` : Manage all users
 - `Categories` : Manage categories and map products to them
 - `Products` : Manage products including variants
+- `Orders` : Manage all the customer orders
 - `Cart` : Add, remove, and update products in the cart
 - `Addresses` : Manage multiple shipping addresses
 - `Profile` : Update and manage user profiles
@@ -16,6 +17,7 @@ A full-featured e-commerce application built with Next.js (frontend) and NestJS 
 - `Categorized Products` : Browse products by category
 - `Product Variants` : Handle different variants like size, color, etc.
 - `Future Features` : More functionalities to be added
+- `Analytics` : View KPIs
 
 ## Tech Stack
 
