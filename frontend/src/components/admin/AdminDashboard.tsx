@@ -27,6 +27,11 @@ export default function AdminDashboard() {
                   Products
                 </div>
               </Link>
+              <Link href="/admin/orders">
+                <div className="border w-[280px] h-[100px] text-[50px] flex items-center justify-center">
+                  Orders
+                </div>
+              </Link>
             </div>
           )}
         </nav>

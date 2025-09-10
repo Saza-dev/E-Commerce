@@ -173,10 +173,6 @@ export class OrdersService {
     return order;
   }
 
-  /**
-   * Update order status. If transitioning to CANCELLED (and it wasn't cancelled before),
-   * restock the ProductVariant quantities accordingly.
-   */
   async adminUpdateOrderStatus(id: string, nextStatus: OrderStatus) {
     return this.prisma.$transaction(async (tx) => {
       const current = await tx.order.findUnique({
