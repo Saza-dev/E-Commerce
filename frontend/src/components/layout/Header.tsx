@@ -40,6 +40,11 @@ export default function AppHeader() {
                 <FaShoppingCart />
               </Button>
             </Link>
+             <Link href={`/orders/${userId}`}>
+              <Button variant="ghost">
+                My Orders
+              </Button>
+            </Link>
             {user?.role === "ADMIN" && (
               <>
                 <Link href="/admin/dashboard">

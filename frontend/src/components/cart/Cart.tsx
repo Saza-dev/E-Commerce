@@ -1,20 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import toast from "react-hot-toast";
+import Button from "../ui/button";
 import {
   CartItem,
   deleteCartItem,
   getCart,
   updateCartItem,
 } from "@/src/lib/api/cart";
-import toast from "react-hot-toast";
-import Button from "../ui/button";
+import { useRouter } from "next/navigation";
 
-interface CartProps {
-  userId: string;
-}
-
-export default function Cart({ userId }: CartProps) {
+export default function Cart({ userId }: { userId: string }) {
+  const router = useRouter();
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,14 +28,15 @@ export default function Cart({ userId }: CartProps) {
 
   useEffect(() => {
     fetchCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateQuantity = async (itemId: number, quantity: number) => {
     try {
       await updateCartItem(userId, { itemId, quantity });
-      fetchCart();
+      await fetchCart();
       toast.success("Item Updated");
-    } catch (err) {
+    } catch {
       toast.error("Updating Failed");
     }
   };
@@ -46,9 +44,9 @@ export default function Cart({ userId }: CartProps) {
   const removeItem = async (itemId: number) => {
     try {
       await deleteCartItem(userId, { itemId });
-      fetchCart();
+      await fetchCart();
       toast.success("Item Removed");
-    } catch (err) {
+    } catch {
       toast.error("Removing Failed");
     }
   };
@@ -57,6 +55,11 @@ export default function Cart({ userId }: CartProps) {
     (acc, item) => acc + item.quantity * (item.variant?.price ?? 0),
     0
   );
+
+  const goToCheckout = () => {
+    // /checkout uses JWT to get user & lets them pick an address
+    router.push(`/checkout/${userId}`);
+  };
 
   if (loading) return <div>Loading cart...</div>;
 
@@ -67,11 +70,10 @@ export default function Cart({ userId }: CartProps) {
       {items.map((item) => (
         <div
           key={item.id}
-          className="flex w-full  max-w-5xl  justify-between items-center mb-4 border-b pb-2"
+          className="flex w-full max-w-5xl justify-between items-center mb-4 border-b pb-2"
         >
           <div className="w-[200px]">
             <img
-              key={item.variant?.id}
               src={item.variant?.images?.[0]?.url ?? "/placeholder.png"}
               alt={item.variant?.color ?? "No color"}
               width={100}
@@ -89,12 +91,11 @@ export default function Cart({ userId }: CartProps) {
               {item.variant?.color}
             </div>
             <div className="text-[14px] font-[700]">
-              {" "}
               LKR {item.variant?.price}
             </div>
           </div>
+
           <div className="flex items-center gap-2">
-            {/* Decrease button */}
             <button
               onClick={() =>
                 item.quantity > 1 && updateQuantity(item.id, item.quantity - 1)
@@ -104,7 +105,6 @@ export default function Cart({ userId }: CartProps) {
               -
             </button>
 
-            {/* Quantity input */}
             <input
               type="number"
               min={1}
@@ -115,7 +115,6 @@ export default function Cart({ userId }: CartProps) {
               className="h-10 w-16 pl-4 border rounded text-center"
             />
 
-            {/* Increase button */}
             <button
               onClick={() => updateQuantity(item.id, item.quantity + 1)}
               className="bg-gray-200 w-10 h-10 text-[20px] font-[700] rounded hover:bg-gray-300"
@@ -123,7 +122,6 @@ export default function Cart({ userId }: CartProps) {
               +
             </button>
 
-            {/* Remove button */}
             <button
               onClick={() => removeItem(item.id)}
               className="bg-red-600 text-white w-[90px] h-10 rounded hover:bg-red-700"
@@ -137,10 +135,19 @@ export default function Cart({ userId }: CartProps) {
       <div className="flex w-full max-w-5xl justify-end">
         <div className="flex flex-col gap-5 mt-10">
           <div className="flex gap-4 items-center">
-            <h2 className="text-xl font-[500]">Total : </h2>
-            <h2 className="text-[14px] font-[500] text-gray-600">LKR {totalPrice.toFixed(2)}</h2>
+            <h2 className="text-xl font-[500]">Total :</h2>
+            <h2 className="text-[14px] font-[500] text-gray-600">
+              LKR {totalPrice.toFixed(2)}
+            </h2>
           </div>
-          <Button className="w-[150px] h-[50px]">CheckOut</Button>
+
+          {/* Pick ONE of these buttons */}
+          <div className="flex gap-3">
+            {/* A) Route to checkout page (address selection) */}
+            <Button onClick={goToCheckout} className="w-[150px] h-[50px]">
+              Checkout
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -37,6 +37,7 @@ model User {
   PasswordResetToken PasswordResetToken[]
   Address            Address[]
   CustomerProfile    CustomerProfile[]
+  Order              Order[]
 
   @@index([role])
   @@index([status])
@@ -140,6 +141,7 @@ model Product {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   CartItem    CartItem[]
+  OrderItem   OrderItem[]
 }
 
 model ProductVariant {
@@ -153,6 +155,7 @@ model ProductVariant {
   status    StockStatus    @default(IN_STOCK)
   images    ProductImage[]
   CartItem  CartItem[]
+  OrderItem OrderItem[]
 }
 
 model ProductImage {
@@ -186,4 +189,86 @@ model CartItem {
   variant   ProductVariant @relation(fields: [variantId], references: [id])
   variantId Int
   quantity  Int            @default(1)
+}
+
+// ====== Enums ======
+enum OrderStatus {
+  PROCESSING
+  FULFILLED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD
+}
+
+// ====== Models ======
+model AddressSnapshot {
+  id                String   @id @default(cuid())
+  // A denormalized, immutable copy captured at order time
+  userId            String?
+  originalAddressId String?
+  fullName          String?
+  line1             String
+  line2             String?
+  city              String
+  state             String?
+  postalCode        String?
+  country           String
+  phone             String?
+  createdAt         DateTime @default(now())
+
+  orders Order[]
+
+  @@index([userId])
+}
+
+model Order {
+  id                String          @id @default(cuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status            OrderStatus     @default(PROCESSING)
+  paymentMethod     PaymentMethod   @default(CARD)
+  paymentRef        String?
+  items             OrderItem[]
+  // Snapshot of shipping address captured at time of order
+  shippingAddressId String
+  shippingAddress   AddressSnapshot @relation(fields: [shippingAddressId], references: [id])
+
+  // Money fields — Float as requested
+  itemsTotal  Float
+  shippingFee Float    @default(0)
+  discount    Float    @default(0)
+  totalAmount Float // itemsTotal + shippingFee - discount
+  paidAmount  Float // full amount for this project
+  paidAt      DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  variantId Int
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+
+  quantity  Int
+  unitPrice Float // price captured at purchase time (from variant.price)
+  lineTotal Float
+
+  // nice-to-have denorm to show historical names/colors/sizes even if product changes later
+  productName  String
+  variantSize  String?
+  variantColor String?
+
+  @@index([orderId])
 }
