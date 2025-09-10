@@ -49,8 +49,6 @@ export default function AddVariant({
             status: values.status,
             images: values.images.filter((url) => url.trim() !== ""),
           };
-
-          console.log(payload);
           const variant = await createVariant(payload);
           if (variant) {
             toast.success("Variant Created Successfully");

@@ -15,6 +15,7 @@ import { ProductsModule } from './products/products.module';
 import { VariantsModule } from './variants/varinats.module';
 import { CartModule } from './cart/cart.module';
 import { OrdersModule } from './orders/orders.module';
+import { ReportsModule } from './reports/reports.module';
 
 const throttlers =
   process.env.NODE_ENV === 'production'
@@ -44,6 +45,7 @@ const throttlers =
     VariantsModule,
     CartModule,
     OrdersModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

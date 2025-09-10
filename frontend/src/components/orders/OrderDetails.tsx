@@ -16,7 +16,6 @@ export default function OrderDetails({ orderId }: { orderId: string }) {
       try {
         const data = await getOrder(orderId);
         setOrder(data);
-        console.log(data);
       } catch (e: any) {
         setError(
           e?.response?.data?.message || e.message || "Failed to load order"

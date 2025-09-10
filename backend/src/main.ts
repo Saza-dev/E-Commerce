@@ -30,7 +30,7 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       transform: true,
-      transformOptions: { enableImplicitConversion: true }, // <-- convert "1" -> 1
+      transformOptions: { enableImplicitConversion: true },
       forbidNonWhitelisted: false,
     }),
   );

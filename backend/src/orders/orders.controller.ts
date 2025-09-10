@@ -44,7 +44,7 @@ export class OrdersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('CUSTOMER', 'ADMIN')
   @Get('orders/all/:userId')
-  my(@Param('id') userId: string) {
+  my(@Param('userId') userId: string) {
     return this.orders.listOrdersForUser(userId);
   }
 
